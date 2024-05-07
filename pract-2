@@ -1,0 +1,28 @@
+import numpy as np
+import matplotlib.pyplot as plt
+x=np.linspace(-5,5,100)
+y_sigmoid=1/(1+np.exp(-x))
+plt.figure()
+plt.plot(x,y_sigmoid,label='sigmoid')
+plt.title('sigmoid activation function')
+plt.xlabel('input')
+plt.ylabel('Output')
+plt.show()
+
+y_relu = np.maximum(0, x)
+plt.figure()
+plt.plot(x, y_relu, label='ReLU', color='orange')
+plt.title('ReLU Activation Function')
+plt.xlabel('Input')
+plt.ylabel('Output')
+plt.legend()
+plt.show()
+
+
+y_tanh = np.tanh(x)
+plt.plot(x, y_tanh, label='tanh', color='purple')
+plt.title('Tanh Activation Function')
+plt.xlabel('Input')
+plt.ylabel('Output')
+plt.legend()
+plt.show()
