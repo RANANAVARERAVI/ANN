@@ -1,25 +1,37 @@
-def M(inp1,inp2,w1,w2,th):
-    ws=(w1*inp1)+(w2*inp2)
-    if ws >= th:
+def McCulloch_Pitts_ANDNOT(input1, input2, w1, w2, threshold):
+    # Calculate the weighted sum
+    weighted_sum = (w1 * input1) + (w2 * input2)
+    # Check if the sum is greater than or equal to the threshold
+    if weighted_sum >= threshold:
         return 1
     else:
         return 0
-w1=0.5
-w2=-0.5
-th=0.5
-lr=0.1
-to=[(0,0),(0,1),(1,0),(1,1)]
-ep=100
-for ep in range(ep):
-    for inputs,to in zip([(0,0),(0,1),(1,0),(1,1)],to):
-        inp1,inp2=inputs
-        output=M(inp1,inp2,w1,w2,th)
-        error=to-op
-        w1+=lr*er*inp1
-        w2+=lr*er*inp2
-        th-=lr*error
-print("AND NOT=",(0, 0, w1, w2, th))
-print("AND NOT=",(0, 1, w1, w2, th))
-print("AND NOT=",(1, 0, w1, w2, th))
-print("AND NOT=",(1, 1, w1, w2, th))
-print(f"Weights:w1 = {w1}\n\tw2 = {w2}\nThreshold : {th}")
+
+w1 = 0.5
+w2 = -0.5
+threshold = -0.5
+learning_rate = 0.1
+
+
+target_outputs = [0, 0, 1, 0]
+epochs = 1000
+for epoch in range(epochs):
+    # Iterate through each input combination
+    for inputs, target_output in zip([(0, 0), (0, 1), (1, 0), (1, 1)], target_outputs):
+        input1, input2 = inputs
+        
+        # Calculate the actual output
+        output = McCulloch_Pitts_ANDNOT(input1, input2, w1, w2, threshold)
+        
+        # Calculate the error
+        error = target_output - output
+        
+        # Update parameters using gradient descent
+        w1 += learning_rate * error * input1
+        w2 += learning_rate * error * input2
+        threshold -= learning_rate * error
+print("ANDNOT(0, 0) =", McCulloch_Pitts_ANDNOT(0, 0, w1, w2, threshold))
+print("ANDNOT(0, 1) =", McCulloch_Pitts_ANDNOT(0, 1, w1, w2, threshold))
+print("ANDNOT(1, 0) =", McCulloch_Pitts_ANDNOT(1, 0, w1, w2, threshold))
+print("ANDNOT(1, 1) =", McCulloch_Pitts_ANDNOT(1, 1, w1, w2, threshold))
+print(f"Weights:w1 = {w1}\n\tw2 = {w2}\nThreshold : {threshold}")
