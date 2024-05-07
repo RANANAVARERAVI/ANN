@@ -1,0 +1,28 @@
+def M(i1,i2,w1,w2,th):
+    ws=(w1*i1)+(w2*i2)
+    if ws >= th:
+        return 1
+    else:
+        return 0
+
+th=-0.5
+Lr=0.1
+w1=0.5
+w2=-0.5
+target_outputs=[0,0,1,0]
+ep=100
+
+for ep in range (ep):
+    for inputs, target_output in zip([(0, 0), (0, 1), (1, 0), (1, 1)], target_outputs):
+        i1,i2=inputs
+        output=M(i1,i2,w1,w2,th)
+        error = target_output - output
+        w1+=Lr*error*i1
+        w2+=Lr*error*i2
+        th-=Lr*error
+
+print("ANDNOT(0,0)",M(i1,i2,w1,w2,th))
+print("ANDNOT(0,1)",M(i1,i2,w1,w2,th))
+print("ANDNOT(1,0)",M(i1,i2,w1,w2,th))
+print("ANDNOT(1,1)",M(i1,i2,w1,w2,th))
+print(f"weight W1= {w1} \n w2= {w2} \nthreshold= {th}")
