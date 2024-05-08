@@ -1,46 +1,45 @@
+#Write a python program to design a Hopfield Network which stores 4 vectors
+
 import numpy as np
 
-# Define sigmoid activation function
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+# Define the 4 vectors to be stored
+v1 = np.array([1, -1, 1, -1])
+v2 = np.array([-1, 1, -1, 1])
+v3 = np.array([1, 1, -1, -1])
+v4 = np.array([-1, -1, 1, 1])
 
-# Define derivative of sigmoid function
-def sigmoid_derivative(x):
-    return x * (1 - x)
+# Combine the vectors into a weight matrix
+w = np.outer(v1, v1) + np.outer(v2, v2) + np.outer(v3, v3) + np.outer(v4, v4) 
 
-# Define input dataset
-X = np.array([[0,0], [0,1], [1,0], [1,1]])
+# Set the diagonal elements of the weight matrix to zero
+np.fill_diagonal(w, 0)
 
-# Define output dataset
-y = np.array([[0], [1], [1], [0]])
+# Define the activation function (sign function)
+def activation(x):
+    return np.where(x >= 0, 1, -1)
 
-# Define hyperparameters
-learning_rate = 0.1
-num_epochs = 100000
+# Define the Hopfield network function
+def hopfield_network(input_vector, weight_matrix, activation_function, iterations):
+    # Set the initial state of the network to the input vector
+    state = input_vector
+    # Iterate the network for the specified number of iterations
+    for i in range(iterations):
+        # Compute the net input to each neuron
+        net_input = np.dot(weight_matrix, state)
+        # Apply the activation function to the net input to get the new state
+        new_state = activation_function(net_input)
+        # Check if the new state is the same as the current state
+        if np.array_equal(new_state, state):
+            # If the new state is the same as the current state, return it
+            return new_state
+        # If the new state is different from the current state, update the state
+        state = new_state
+    # If the network has not converged after the specified number of iterations, return the current state
+    return state
 
-# Initialize weights randomly with mean 0
-hidden_weights = 2*np.random.random((2,2)) - 1
-output_weights = 2*np.random.random((2,1)) - 1
-
-# Train the neural network
-for i in range(num_epochs):
-
-    # Forward propagation
-    hidden_layer = sigmoid(np.dot(X, hidden_weights))
-    output_layer = sigmoid(np.dot(hidden_layer, output_weights))
-
-    # Backpropagation
-    output_error = y - output_layer
-    output_delta = output_error * sigmoid_derivative(output_layer)
-
-    hidden_error = output_delta.dot(output_weights.T)
-    hidden_delta = hidden_error * sigmoid_derivative(hidden_layer)
-
-    output_weights += hidden_layer.T.dot(output_delta) * learning_rate
-    hidden_weights += X.T.dot(hidden_delta) * learning_rate
-
-# Display input and output
-print("Input:")
-print(X)
-print("Output:")
-print(output_layer)
+# Test the Hopfield network with the stored vectors
+input_vector = np.array([-1, -1, 1, -1])
+output_vector = hopfield_network(input_vector, w, activation, 10)
+print("Input vector:", input_vector)
+print("Output vector:", output_vector)
+w
